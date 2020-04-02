@@ -1,9 +1,9 @@
 
 ;;;  -*- lexical-binding: t; -*-
-
 (setq org-agenda-files '("~/Dropbox/notes/inbox.org"
                           "~/Dropbox/notes/gtd.org"
-                          "~/Dropbox/notes/tickler.org"))
+                          "~/Dropbox/notes/tickler.org"
+                          "~/Dropbox/notes/schedule.org"))
 (setq org-directory "~/Dropbox/notes")
 ;; (setq +todo-file "~/org/todo.org"
 ;;       org-agenda-files '("~/org"))
@@ -168,3 +168,16 @@ are equal return t."
   (org-agenda-redo))
 
 (setq org-super-agenda-header-map (make-sparse-keymap))
+
+(require 'org-gcal)
+
+
+
+(setq org-gcal-client-id "734202814987-1q1s695v0vd53r4b7c3kdoie8f6c59u2.apps.googleusercontent.com"
+      org-gcal-client-secret "Wwr7Iko59OsjFadDyVQg6nLR"
+      org-gcal-file-alist '(("gergely.halacsy@gmail.com" .  "~/Dropbox/notes/schedule.org")
+                            ))
+;; (setq org-gcal-client-id "860972419948-hf9cqea7qhrjh5v6161hh62nsa5vmu05.apps.googleusercontent.com"
+;;       org-gcal-client-secret "fgPsL-v_CY783qLIKuRHqgMr"
+;;       org-gcal-file-alist '(("gergely.halacsy@gmail.com" .  "~/Dropbox/notes/schedule.org")
+;;                             ))

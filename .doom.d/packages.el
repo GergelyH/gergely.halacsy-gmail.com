@@ -54,3 +54,4 @@
 (package! command-log-mode
   :recipe (:host github :repo "lewang/command-log-mode"
            :files ("command-log-mode.el")))
+(package! focus-autosave-mode)

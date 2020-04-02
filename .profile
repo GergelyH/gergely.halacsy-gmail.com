@@ -29,8 +29,7 @@ if [ -f "$HOME/.profile_execute" ]; then
     . "$HOME/.profile_execute"
 fi
 eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-dropbox start
-#setxkbmap se 
+#setxkbmap se
 
 #setxkbmap -option 'ctrl:ralt_rctrl'
 #setxkbmap -option 'caps:swapescape'

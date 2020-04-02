@@ -67,16 +67,21 @@
 ;; Save and backup
 ;;
 (setq create-lockfiles nil)
-(setq auto-save-timeout 9)
-(add-hook 'focus-out-hook 'do-auto-save)
-(add-hook 'auto-save-hook 'full-auto-save)
+(setq auto-save-timeout 10)
+(focus-autosave-mode +1)
+(auto-save-visited-mode +1)
 
+;; (add-hook 'focus-out-hook 'auto-save)
+;; (add-hook 'auto-save-hook 'full-auto-save)
+;; (require 'real-auto-save)
+;; (add-hook 'prog-mode-hook 'real-auto-save-mode)
+;; (setq real-auto-save-interval 10) ;; in seconds
 ;; Custom commands
 ;;
 ;;
 (shell-command "setxkbmap -option 'ctrl:ralt_rctrl'")
 (shell-command "setxkbmap -option 'caps:swapescape'")
-(shell-command "xrandr --output DVI-D-0 --output HDMI-1 ---rotate normal -output HDMI-0 --same-as DVI-D-0")
+;; (shell-command "xrandr --output DVI-D-0 --output HDMI-0 --rotate normal --output HDMI-1 --same-as DVI-D-0")
 ;; (shell-command "xrandr --output DVI-D-0 --output HDMI-1 --rotate inverted --output HDMI-0 --same-as DVI-D-0")
 
 ;; Company

@@ -138,3 +138,6 @@ unset __conda_setup
 # <<< conda initialize <<<
 set -o vi
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+
+export PATH="$PATH:/home/gergeh/programs/flutter/bin"
+export PATH="$PATH:/home/gergeh/programs/android-studio/bin"
