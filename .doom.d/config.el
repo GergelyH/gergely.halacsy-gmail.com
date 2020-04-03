@@ -58,7 +58,7 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 ;;
-(setq projectile-project-search-path '("~/work" "~/Documents"))
+(setq projectile-project-search-path '("~/work"))
 (setq explicit-shell-file-name "/bin/bash")
 (setq shell-file-name "bash")
 (setq source-directory "~/programs/emacs/src")
