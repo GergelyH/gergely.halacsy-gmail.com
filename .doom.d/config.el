@@ -79,8 +79,8 @@
 ;; Custom commands
 ;;
 ;;
-(shell-command "setxkbmap -option 'ctrl:ralt_rctrl'")
-(shell-command "setxkbmap -option 'caps:swapescape'")
+;; (shell-command "setxkbmap -option 'ctrl:ralt_rctrl'")
+;; (shell-command "setxkbmap -option 'caps:swapescape'")
 ;; (shell-command "xrandr --output DVI-D-0 --output HDMI-0 --rotate normal --output HDMI-1 --same-as DVI-D-0")
 ;; (shell-command "xrandr --output DVI-D-0 --output HDMI-1 --rotate inverted --output HDMI-0 --same-as DVI-D-0")
 
