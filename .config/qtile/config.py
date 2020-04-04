@@ -23,11 +23,39 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import os
+import socket
+import subprocess
 
 from libqtile.config import Key, Screen, Group, Drag, Click
 from libqtile.command import lazy
 from libqtile import layout, bar, widget, hook
-import subprocess
+
+from Xlib import X, display
+from Xlib.ext import randr
+from pprint import pprint
+
+from helper import run
+
+run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
+
+# d = display.Display()
+# s = d.screen()
+# r = s.root
+# res = r.xrandr_get_screen_resources()._data
+
+# # Dynamic multiscreen! (Thanks XRandr)
+# num_screens = 0
+# for output in res['outputs']:
+    # print("Output %d:" % (output))
+    # mon = d.xrandr_get_output_info(output, res['config_timestamp'])._data
+    # print("%s: %d" % (mon['name'], mon['num_preferred']))
+    # if mon['num_preferred']:
+        # num_screens += 1
+num_screens = 3
+
+print("%d screens found!" % (num_screens))
+
 import shlex
 
 from typing import List  # noqa: F401
@@ -38,10 +66,14 @@ keys = [
     # Switch between windows in current stack pane
     Key([mod], "j", lazy.layout.down()),
     Key([mod], "k", lazy.layout.up()),
+    Key([mod], "h", lazy.layout.left()),
+    Key([mod], "l", lazy.layout.right()),
 
     # Move windows up or down in current stack
     Key([mod, "control"], "j", lazy.layout.shuffle_down()),
     Key([mod, "control"], "k", lazy.layout.shuffle_up()),
+    Key([mod, "control"], "h", lazy.layout.shuffle_left()),
+    Key([mod, "control"], "l", lazy.layout.shuffle_right()),
 
     # Switch window focus to other pane(s) of stack
     Key([mod], "space", lazy.layout.next()),
@@ -94,13 +126,42 @@ screens = [
                 widget.GroupBox(),
                 widget.Prompt(),
                 widget.WindowName(),
-                widget.TextBox("default config", name="default"),
                 widget.Systray(),
                 widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
             ],
-            24,
+            18,
         ),
-    ),
+        width=1600,
+        height=1200,
+    ),  
+    Screen(
+        bottom=bar.Bar(
+            [
+                widget.GroupBox(),
+                widget.Prompt(),
+                widget.WindowName(),
+                widget.Systray(),
+                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
+            ],
+            18,
+        ),
+        width=2560,
+        height=1080,
+    ),  
+    Screen(
+        bottom=bar.Bar(
+            [
+                widget.GroupBox(),
+                widget.Prompt(),
+                widget.WindowName(),
+                widget.Systray(),
+                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
+            ],
+            18,
+        ),
+        width=1920,
+        height=1080,
+    ),  
 ]
 
 # Drag floating layouts.
@@ -147,24 +208,32 @@ focus_on_window_activation = "smart"
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
 
-def runone(cmdline):
-    """Check if another instance of an app is running, otherwise start a new one."""
-    cmd = shlex.split(cmdline)
-    try:
-        subprocess.check_call(['pgrep', cmd[0]])
-    except:
-        run(cmdline)
 
-
-def run(cmdline):
-    subprocess.Popen(shlex.split(cmdline))
-
-@hook.subscribe.startup
-def startup():
+# ----------------------------------------------------------------------------
+# Hooks
+@hook.subscribe.startup_complete
+def autostart():
     """
-    Run after qtile is started
+    My startup script has a sleep in it as some of the commands depend on
+    state from the rest of the init. This will cause start/restart of qtile
+    to hang slightly as the sleep runs.
     """
-    run('xrandr --output DVI-D-1 --left-of HDMI-2 --output HDMI-1 --right-of HDMI-2')
-    runone('chromium')
-    runone('emacs')
-    runone('termite')
+    os.environ.setdefault('RUNNING_QTILE', 'True')
+    run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
+    run("setxkbmap -option ctrl:ralt_rctrl")
+    run("setxkbmap -option caps:swapescape")
+
+
+
+@hook.subscribe.screen_change
+def restart_on_randr(qtile, ev):
+    """
+    Restart and reload config when screens are changed so that we correctly
+    init any new screens and correctly remove any old screens that we no
+    longer need.
+    There is an annoying side effect of removing a second monitor that results
+    in windows being 'stuck' on the now invisible desktop...
+    """
+    pass
+    lazy.restart()
+    # qtile.cmd_restart()
