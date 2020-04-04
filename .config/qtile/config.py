@@ -28,7 +28,8 @@ import socket
 import subprocess
 
 from libqtile.config import Key, Screen, Group, Drag, Click
-from libqtile.command import lazy
+from libqtile.command_client import CommandClient
+from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
 
 from Xlib import X, display
@@ -37,26 +38,8 @@ from pprint import pprint
 
 from helper import run
 
+# This has to be run this before screens are defined, so that it correctly picks up the order and resulotion
 run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
-
-# d = display.Display()
-# s = d.screen()
-# r = s.root
-# res = r.xrandr_get_screen_resources()._data
-
-# # Dynamic multiscreen! (Thanks XRandr)
-# num_screens = 0
-# for output in res['outputs']:
-    # print("Output %d:" % (output))
-    # mon = d.xrandr_get_output_info(output, res['config_timestamp'])._data
-    # print("%s: %d" % (mon['name'], mon['num_preferred']))
-    # if mon['num_preferred']:
-        # num_screens += 1
-num_screens = 3
-
-print("%d screens found!" % (num_screens))
-
-import shlex
 
 from typing import List  # noqa: F401
 
@@ -97,6 +80,7 @@ keys = [
     Key([mod], "r", lazy.spawncmd()),
 ]
 
+
 groups = [Group(i) for i in "asdfuiop"]
 
 for i in groups:
@@ -135,6 +119,19 @@ screens = [
         height=1200,
     ),  
     Screen(
+        top=bar.Bar(
+            [
+                widget.HDDBusyGraph(),
+                widget.cpu.CPU(),
+                widget.Memory(),
+                widget.net.Net(),
+                widget.pacman.Pacman(),
+                widget.Systray(),
+                widget.Clipboard(),
+                widget.Volume(),
+            ],
+            18,
+        ),
         bottom=bar.Bar(
             [
                 widget.GroupBox(),
@@ -234,6 +231,5 @@ def restart_on_randr(qtile, ev):
     There is an annoying side effect of removing a second monitor that results
     in windows being 'stuck' on the now invisible desktop...
     """
-    pass
     lazy.restart()
     # qtile.cmd_restart()
