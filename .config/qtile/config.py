@@ -23,23 +23,18 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import os
-import socket
-import subprocess
 
-from libqtile.config import Key, Screen, Group, Drag, Click
-from libqtile.command_client import CommandClient
+from libqtile.config import Key, Screen, Group, Drag, Click, Match
 from libqtile.lazy import lazy
-from libqtile import layout, bar, widget, hook
-
-from Xlib import X, display
-from Xlib.ext import randr
-from pprint import pprint
+from libqtile import layout, hook, bar, widget
 
 from helper import run
 
+from apperance import widget_defaults, extension_defaults
+from apperance import top_bar, bottom_bar
+
 # This has to be run this before screens are defined, so that it correctly picks up the order and resulotion
-run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
+# run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
 
 from typing import List  # noqa: F401
 
@@ -70,6 +65,9 @@ keys = [
     # multiple stack panes
     Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
     Key([mod], "Return", lazy.spawn("termite")),
+    Key([mod], "c", lazy.spawn("chromium")),
+    Key([mod], "e", lazy.spawn("emacs")),
+    Key([mod], "v", lazy.spawn("pavucontrol")),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout()),
@@ -81,86 +79,96 @@ keys = [
 ]
 
 
-groups = [Group(i) for i in "asdfuiop"]
+groups = [
+    Group(
+        "1",
+        label="A"
+    ),
+    Group(
+        "2",
+        label="B"
+    ),
+    Group(
+        "3",
+        label="C"
+    ),
+    Group(
+        "c",
+        matches=[Match(
+            title=["chromium"],
+            wm_class=["chromium"])],
+        label=""
+    ),
+    Group(
+        "e",
+        matches=[Match(
+            title=["Emacs"],
+            wm_class=["Emacs"])],
+        label=""
+    ),
+    Group(
+        "t",
+        matches=[Match(
+            title=["termite"],
+            wm_class=["termite"])],
+        label=""
+    ),
+    # Group(
+    #     "5",
+    #     matches=[Match(wm_class=["Thunderbird"])],
+    #     label=""
+    # ),
+    # Group(
+    #   "6",
+    #     matches=[Match(wm_class=["code-oss"])],
+    #     label=""
+    # ),
+    # Group(
+    #     "7",
+    #     label=""
+    # ),
+    ]
 
-for i in groups:
+# groups = [Group(c) for c in "asdfuiop"]
+
+def current_window_to_screen_lazy_callback(screen_num:int):
+    def callback(qtile):
+        qtile.current_window.toscreen(screen_num)
+    return lazy.funciton(callback)
+
+for i,key in enumerate("asd"):
     keys.extend([
         # mod1 + letter of group = switch to group
-        Key([mod], i.name, lazy.group[i.name].toscreen()),
+        Key([mod], key, lazy.to_screen(i)),
 
         # mod1 + shift + letter of group = switch to & move focused window to group
-        Key([mod, "shift"], i.name, lazy.window.togroup(i.name)),
+        Key([mod, "shift"], key, lazy.window.toscreen(i))
     ])
 
+# layouts = [
+#     layout.Max(),
+#     layout.Stack(num_stacks=2),
+#     # Try more layouts by unleashing below layouts.
+#     # layout.Bsp(),
+#     # layout.Columns(),
+#     # layout.Matrix(),
+#     # layout.MonadTall(),
+#     # layout.MonadWide(),
+#     # layout.RatioTile(),
+#     # layout.Tile(),
+#     # layout.TreeTab(),
+#     # layout.VerticalTile(),
+#     # layout.Zoomy(),
+# ]
 layouts = [
     layout.bsp.Bsp()
 ]
 
-widget_defaults = dict(
-    font='sans',
-    fontsize=12,
-    padding=3,
-)
-extension_defaults = widget_defaults.copy()
-
 screens = [
-    Screen(
-        bottom=bar.Bar(
-            [
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Systray(),
-                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
-            ],
-            18,
-        ),
-        width=1600,
-        height=1200,
-    ),  
-    Screen(
-        top=bar.Bar(
-            [
-                widget.HDDBusyGraph(),
-                widget.cpu.CPU(),
-                widget.Memory(),
-                widget.net.Net(),
-                widget.pacman.Pacman(),
-                widget.Systray(),
-                widget.Clipboard(),
-                widget.Volume(),
-            ],
-            18,
-        ),
-        bottom=bar.Bar(
-            [
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Systray(),
-                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
-            ],
-            18,
-        ),
-        width=2560,
-        height=1080,
-    ),  
-    Screen(
-        bottom=bar.Bar(
-            [
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Systray(),
-                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
-            ],
-            18,
-        ),
-        width=1920,
-        height=1080,
-    ),  
+    Screen(top=top_bar(),bottom=bottom_bar()),
+    Screen(),
+    Screen(top=top_bar())
 ]
-
 # Drag floating layouts.
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
@@ -215,8 +223,8 @@ def autostart():
     state from the rest of the init. This will cause start/restart of qtile
     to hang slightly as the sleep runs.
     """
-    os.environ.setdefault('RUNNING_QTILE', 'True')
-    run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
+    # os.environ.setdefault('RUNNING_QTILE', 'True')
+    # run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
     run("setxkbmap -option ctrl:ralt_rctrl")
     run("setxkbmap -option caps:swapescape")
 
@@ -231,5 +239,5 @@ def restart_on_randr(qtile, ev):
     There is an annoying side effect of removing a second monitor that results
     in windows being 'stuck' on the now invisible desktop...
     """
-    lazy.restart()
     # qtile.cmd_restart()
+    pass

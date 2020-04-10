@@ -20,7 +20,7 @@
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 ;;(setq doom-font (font-spec :family "Mononoki Nerd Font Mono" :size 15))
-;;(setq doom-font (font-spec :family "Fira Mono" :size 15))
+(setq doom-font (font-spec :family "Fira Mono" :size 15))
 ;;(unless (find-font doom-font)
   ;;(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 15)))
 ;;(setq doom-font (font-spec :family "Iosevka" :size 16))
