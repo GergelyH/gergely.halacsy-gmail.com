@@ -1,0 +1,48 @@
+#+TITLE: Arch Setup
+
+follow this
+https://www.fosslinux.com/7117/how-to-install-arch-linux-complete-guide.htm
+
+additionally:
+** pacman -S (further on referred as p) neovim
+** p linux linux-firmware after chroot
+** p dhcpcd
+** Edit mirrorlist
+* After reboot
+- p xorg-server git xorg-xinit xorg-apps nvidia lightdm lightdm-gtk-greeter
+  xorg-drivers termite openssh chromium 
+- useradd gergeh
+- usermod -aG wheel gergeh
+- ln -s /usr/bin/nvim /usr/bin/vi
+- visudo -> uncomment wheel line
+- passwd gergeh
+- su gergeh
+- mkdir programs work
+- cd programs
+- git clone https://aur.archlinux.org/yay.git
+- cd yay
+- makepkg -si
+- yay qtile-python3-git
+- sudo systemctl start lightdm
+- (if this doesnt work cp /etc/share/X11/.xinitrc ~/.xinitrc and comment out
+  starting programs and replace them with qtile)
+- yay -S emacs-git
+- git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+- ~/.emacs.d/bin/doom install
+- ssh-keygen -t rsa
+- add ssh key by catting it to terminal then copypasting it to github
+- cd ~/work
+- git clone git@github.com:GergelyH/notes.git
+- cd
+- mkdir dotfiles
+- alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+- config clone git@github.com:GergelyH/linux-config.git
+- p pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol
+- yay -S ttf-ms-fonts ttf-ubuntu-font-family ttf-fira-code ttf-fira-mono
+- sudo pacman -S powerline powerline-fonts
+- yay -S ttf-all-the-icons
+- sudo pacman -S gnu-free-fonts noto-fonts
+- pip install psutil
+- sudo pacman -S pacman-contrib
+- reboot
+- sudo pacman -S python-dbus
