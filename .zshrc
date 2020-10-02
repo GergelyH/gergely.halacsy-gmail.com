@@ -3,7 +3,7 @@
 
 # Path to your oh-my-zsh installation.
 # export ZSH="/home/gergeh/.oh-my-zsh"
-export ZSH="/home/gergelyh/.oh-my-zsh"
+export ZSH="/home/gergeh/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -144,3 +144,23 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -v '^?' backward-delete-char
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:/usr/local/go/bin
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/gergeh/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/gergeh/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/gergeh/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/gergeh/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+

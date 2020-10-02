@@ -33,13 +33,16 @@ def top_bar():
                     background=colors['deep-blue'],
                    )
 
+keyboard_widget = widget.keyboardlayout.KeyboardLayout(configured_keyboards=['us','hu'])
+
 def bottom_bar():
     return bar.Bar([
-        widget.graph.HDDBusyGraph(device='nvme0n1'),
+        widget.graph.HDDBusyGraph(device='nvme0n1p1'),
         widget.cpu.CPU(format='CPU {load_percent}%'),
         memory_widget.Memory(),
         widget.net.Net(format='{down} ↓↑ {up}'),
-        widget.check_updates.CheckUpdates(),
+        widget.check_updates.CheckUpdates(custom_command="checkupdates"),
+        widget.keyboardlayout.KeyboardLayout(configured_keyboards=['us','hu']),
         widget.spacer.Spacer(),
         widget.groupbox.GroupBox(),
         widget.prompt.Prompt(),

@@ -85,7 +85,7 @@
 ;; (shell-command "xrandr --output DVI-D-0 --output HDMI-1 --rotate inverted --output HDMI-0 --same-as DVI-D-0")
 
 ;; Company
-(setq company-idle-delay 0.1)
+(setq company-idle-delay 0.05)
 
 ;; Tabbing
 ;;
@@ -111,5 +111,10 @@
     ;;(my-select-window-by-number
      ;;(string-to-number (car (nreverse (split-string key-desc "-")))))))
 ;;)
+(setq ein:use-auto-complete t
+                  ein:completion-backend 'ein:use-company-backend
+                  )
+(elpy-enable)
+
 (load! "+org")
 (load! "+functions")

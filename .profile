@@ -28,13 +28,4 @@ fi
 if [ -f "$HOME/.profile_execute" ]; then
     . "$HOME/.profile_execute"
 fi
-eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-#setxkbmap se
-
-#setxkbmap -option 'ctrl:ralt_rctrl'
-#setxkbmap -option 'caps:swapescape'
-#setxkbmap -option ctrl:ralt_rctrl
-#setxkbmap -option caps:swapescape
-#xrandr --output DVI-D-0 --output HDMI-1 --output HDMI-0 --same-as DVI-D-0
-#source ~/.mystartscripts
-#. ~/.mystartscripts
+SHELL="/bin/zsh"

@@ -30,6 +30,8 @@ from libqtile import layout, hook, bar, widget
 
 from helper import run
 
+from controls import next_keyboard
+
 from apperance import widget_defaults, extension_defaults
 from apperance import top_bar, bottom_bar
 
@@ -39,6 +41,7 @@ from apperance import top_bar, bottom_bar
 from typing import List  # noqa: F401
 
 mod = "mod4"
+username = "gergeh"
 
 keys = [
     # Switch between windows in current stack pane
@@ -64,10 +67,11 @@ keys = [
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
     Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
-    Key([mod], "Return", lazy.spawn("termite")),
+    Key([mod], "Return", lazy.spawn("termite --exec='/bin/zsh'")),
     Key([mod], "c", lazy.spawn("chromium")),
     Key([mod], "e", lazy.spawn("emacs")),
     Key([mod], "v", lazy.spawn("pavucontrol")),
+    Key([mod], "x", lazy.function(next_keyboard)),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout()),
@@ -82,7 +86,7 @@ keys = [
 groups = [
     Group(
         "1",
-        label="A"
+        label="A",
     ),
     Group(
         "2",
@@ -94,33 +98,18 @@ groups = [
     ),
     Group(
         "c",
-        matches=[Match(
-            title=["chromium"],
-            wm_class=["chromium"])],
-        label=""
     ),
     Group(
         "e",
-        matches=[Match(
-            title=["Emacs"],
-            wm_class=["Emacs"])],
-        label=""
     ),
     Group(
         "t",
-        matches=[Match(
-            title=["termite"],
-            wm_class=["termite"])],
-        label=""
     ),
     # Group(
     #     "5",
     #     matches=[Match(wm_class=["Thunderbird"])],
     #     label=""
-    # ),
-    # Group(
-    #   "6",
-    #     matches=[Match(wm_class=["code-oss"])],
+    # ),diskde-oss"])],
     #     label=""
     # ),
     # Group(
@@ -160,14 +149,36 @@ for i,key in enumerate("asd"):
 #     # layout.VerticalTile(),
 #     # layout.Zoomy(),
 # ]
+layout_theme = {"border_width": 2,
+                "margin": 6,
+                "border_focus": "e1acff",
+                "border_normal": "1D2330"
+                }
+
 layouts = [
-    layout.bsp.Bsp()
+    layout.MonadTall(**layout_theme),
+    layout.bsp.Bsp(**layout_theme),
+    layout.Max(**layout_theme),
+    layout.TreeTab(
+         font = "Ubuntu",
+         fontsize = 10,
+         sections = ["FIRST", "SECOND"],
+         section_fontsize = 11,
+         bg_color = "141414",
+         active_bg = "90C435",
+         active_fg = "000000",
+         inactive_bg = "384323",
+         inactive_fg = "a0a0a0",
+         padding_y = 5,
+         section_top = 10,
+         panel_width = 320
+         ),
+    layout.Floating(**layout_theme),
 ]
 
 screens = [
     Screen(top=top_bar(),bottom=bottom_bar()),
-    Screen(),
-    Screen(top=top_bar())
+    Screen(top=top_bar(),bottom=bottom_bar()),
 ]
 # Drag floating layouts.
 mouse = [
@@ -224,9 +235,12 @@ def autostart():
     to hang slightly as the sleep runs.
     """
     # os.environ.setdefault('RUNNING_QTILE', 'True')
-    # run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
+    # run("xrandr --output DVI-D-1 --mode 1600x1200 --right-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
+    # run("xrandr --output DVI-D-0 --mode 1600x1200 --right-of HDMI-2 --output HDMI-2 --mode 2560x1080")
     run("setxkbmap -option ctrl:ralt_rctrl")
     run("setxkbmap -option caps:swapescape")
+    wifi_interface = "wlp5s0"
+    run(f"wpa_supplicant -B -i {wifi_interface} -c /home/{username}/.config/wpa_supplicant/wpa_supplicant.conf")
 
 
 

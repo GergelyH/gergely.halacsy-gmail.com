@@ -1,10 +1,10 @@
 
 ;;;  -*- lexical-binding: t; -*-
-(setq org-agenda-files '("~/Dropbox/notes/inbox.org"
-                          "~/Dropbox/notes/gtd.org"
-                          "~/Dropbox/notes/tickler.org"
-                          "~/Dropbox/notes/schedule.org"))
-(setq org-directory "~/Dropbox/notes")
+(setq org-agenda-files '("~/work/notes/inbox.org"
+                          "~/work/notes/gtd.org"
+                          "~/work/notes/tickler.org"
+                          "~/work/notes/schedule.org"))
+(setq org-directory "~/work/notes")
 ;; (setq +todo-file "~/org/todo.org"
 ;;       org-agenda-files '("~/org"))
 ;; (setq +daypage-path "~/org/days/")
@@ -149,7 +149,7 @@ are equal return t."
                 :todo "RECURRING"
                 ))
 )
-(setq org-shift-today-by-days 1)
+(setq org-shift-today-by-days 0)
 
 (defun org-today ()
   "Return today date, considering `org-extend-today-until'."

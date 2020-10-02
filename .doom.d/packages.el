@@ -55,3 +55,6 @@
   :recipe (:host github :repo "lewang/command-log-mode"
            :files ("command-log-mode.el")))
 (package! focus-autosave-mode)
+(package! jupyter)
+(package! pynt)
+(package! elpy)
