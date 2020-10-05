@@ -24,6 +24,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from typing import List  # noqa: F401
+import os
+import subprocess
+
 from libqtile.config import Key, Screen, Group, Drag, Click, Match
 from libqtile.lazy import lazy
 from libqtile import layout, hook, bar, widget
@@ -37,8 +41,6 @@ from apperance import top_bar, bottom_bar
 
 # This has to be run this before screens are defined, so that it correctly picks up the order and resulotion
 # run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
-
-from typing import List  # noqa: F401
 
 mod = "mod4"
 username = "gergeh"
@@ -69,7 +71,8 @@ keys = [
     Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
     Key([mod], "Return", lazy.spawn("termite --exec='/bin/zsh'")),
     Key([mod], "c", lazy.spawn("chromium")),
-    Key([mod], "e", lazy.spawn("emacs")),
+    Key([mod], "e", lazy.spawn("code")),
+    Key([mod], "f", lazy.spawn("termite --exec='ranger'")),
     Key([mod], "v", lazy.spawn("pavucontrol")),
     Key([mod], "x", lazy.function(next_keyboard)),
 
@@ -83,47 +86,31 @@ keys = [
 ]
 
 
-groups = [
-    Group(
-        "1",
-        label="A",
-    ),
-    Group(
-        "2",
-        label="B"
-    ),
-    Group(
-        "3",
-        label="C"
-    ),
-    Group(
-        "c",
-    ),
-    Group(
-        "e",
-    ),
-    Group(
-        "t",
-    ),
-    # Group(
-    #     "5",
-    #     matches=[Match(wm_class=["Thunderbird"])],
-    #     label=""
-    # ),diskde-oss"])],
-    #     label=""
-    # ),
-    # Group(
-    #     "7",
-    #     label=""
-    # ),
-    ]
+group_names = [("WWW", {'layout': 'bsp'}),
+                ("WWW2", {'layout': 'bsp'}),
+               ("DEV", {'layout': 'treetab'}),
+               ("CMD", {'layout': 'bsp'}),
+               ("File", {'layout': 'treetab'}),
+               ("Misc", {'layout': 'treetab'})] 
 
-# groups = [Group(c) for c in "asdfuiop"]
+groups = [Group(name, **kwargs) for name, kwargs in group_names]
+
+def bring_group_to_screen(group_id):
+    def callback(qtile):
+        qtile.group[group_id].toscreen()
+    return lazy.function(callback)
+
+for i, (name, kwargs) in enumerate(group_names, 1):
+    keys.append(Key([mod], str(i), bring_group_to_screen(name)))        # Switch to another group
+#    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))        # Switch to another group
+    keys.append(Key([mod, "shift"], str(i), lazy.group[name].bring_to_front()))# Send current window to another group
+    keys.append(Key([mod, "control"], str(i), lazy.window.togroup(name))) # Send current window to another group
+
 
 def current_window_to_screen_lazy_callback(screen_num:int):
     def callback(qtile):
         qtile.current_window.toscreen(screen_num)
-    return lazy.funciton(callback)
+    return lazy.function(callback)
 
 for i,key in enumerate("asd"):
     keys.extend([
@@ -131,34 +118,17 @@ for i,key in enumerate("asd"):
         Key([mod], key, lazy.to_screen(i)),
 
         # mod1 + shift + letter of group = switch to & move focused window to group
-        Key([mod, "shift"], key, lazy.window.toscreen(i))
+        # Key([mod, "shift"], key, lazy.window.toscreen(i))
     ])
 
-# layouts = [
-#     layout.Max(),
-#     layout.Stack(num_stacks=2),
-#     # Try more layouts by unleashing below layouts.
-#     # layout.Bsp(),
-#     # layout.Columns(),
-#     # layout.Matrix(),
-#     # layout.MonadTall(),
-#     # layout.MonadWide(),
-#     # layout.RatioTile(),
-#     # layout.Tile(),
-#     # layout.TreeTab(),
-#     # layout.VerticalTile(),
-#     # layout.Zoomy(),
-# ]
 layout_theme = {"border_width": 2,
-                "margin": 6,
+                "margin": 5,
                 "border_focus": "e1acff",
                 "border_normal": "1D2330"
                 }
 
 layouts = [
-    layout.MonadTall(**layout_theme),
     layout.bsp.Bsp(**layout_theme),
-    layout.Max(**layout_theme),
     layout.TreeTab(
          font = "Ubuntu",
          fontsize = 10,
@@ -171,7 +141,7 @@ layouts = [
          inactive_fg = "a0a0a0",
          padding_y = 5,
          section_top = 10,
-         panel_width = 320
+         panel_width = 200,
          ),
     layout.Floating(**layout_theme),
 ]
@@ -239,6 +209,8 @@ def autostart():
     # run("xrandr --output DVI-D-0 --mode 1600x1200 --right-of HDMI-2 --output HDMI-2 --mode 2560x1080")
     run("setxkbmap -option ctrl:ralt_rctrl")
     run("setxkbmap -option caps:swapescape")
+    home = os.path.expanduser('~')
+    run('sh ' + home + '/.config/qtile/autostart.sh')
     wifi_interface = "wlp5s0"
     run(f"wpa_supplicant -B -i {wifi_interface} -c /home/{username}/.config/wpa_supplicant/wpa_supplicant.conf")
 
