@@ -34,7 +34,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+;; (setq org-directory "~/org/")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -61,7 +61,7 @@
 (setq projectile-project-search-path '("~/work"))
 (setq explicit-shell-file-name "/bin/bash")
 (setq shell-file-name "bash")
-(setq source-directory "~/programs/emacs/src")
+;; (setq source-directory "~/programs/emacs/src")
 
 
 ;; Save and backup
@@ -111,10 +111,13 @@
     ;;(my-select-window-by-number
      ;;(string-to-number (car (nreverse (split-string key-desc "-")))))))
 ;;)
-(setq ein:use-auto-complete t
-                  ein:completion-backend 'ein:use-company-backend
-                  )
-(elpy-enable)
-
+;;
+;;
+;;
+;; (setq ein:use-auto-complete t
+;;                   ein:completion-backend 'ein:use-company-backend
+;;                   )
+;; (elpy-enable)
+;; (defalias 'display-buffer-in-major-side-window 'window--make-major-side-window)
 (load! "+org")
 (load! "+functions")

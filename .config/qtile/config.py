@@ -26,24 +26,59 @@
 
 from typing import List  # noqa: F401
 import os
+import sys
 import subprocess
 
 from libqtile.config import Key, Screen, Group, Drag, Click, Match
 from libqtile.lazy import lazy
 from libqtile import layout, hook, bar, widget
+from libqtile.ipc import find_sockfile, Client 
+from libqtile.command_client import InteractiveCommandClient 
+from libqtile.command_interface import IPCCommandInterface                                                                    
+
+client = InteractiveCommandClient(IPCCommandInterface(Client(find_sockfile())))
 
 from helper import run
-
 from controls import next_keyboard
-
 from apperance import widget_defaults, extension_defaults
 from apperance import top_bar, bottom_bar
+from debug_logging import logger
 
 # This has to be run this before screens are defined, so that it correctly picks up the order and resulotion
 # run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
 
 mod = "mod4"
 username = "gergeh"
+
+def bring_group_to_front(group_name):
+    try:
+        def callback(qtile):
+            group = qtile.groups_map[group_name]
+            screen = group.info()['screen']
+            if screen is None:
+                group.cmd_toscreen(screen_map[group_name])
+            qtile.cmd_to_screen(screen_map[group_name])
+            # qtile.to_screen(screen)
+            # qtile.screen[screen].window.focus()
+    except Exception as e:
+        logger.error(str(e))
+        logger.error(sys.exc_info())
+        raise
+    return lazy.function(callback)
+
+def bring_group_to_screen(group_index):
+    try:
+        def callback(qtile):
+            # logger.error(qtile.__dict__)
+            # logger.error(qtile.core.__dict__)
+            # logger.error(qtile.groups[group_index].__dict__)
+            # logger.error(dir(qtile.groups[group_index]))
+            qtile.groups[group_index].cmd_toscreen()
+    except Exception as e:
+        logger.error(str(e))
+        logger.error(sys.exc_info())
+        raise
+    return lazy.function(callback)
 
 keys = [
     # Switch between windows in current stack pane
@@ -73,6 +108,9 @@ keys = [
     Key([mod], "c", lazy.spawn("chromium")),
     Key([mod], "e", lazy.spawn("code")),
     Key([mod], "f", lazy.spawn("termite --exec='ranger'")),
+    Key([mod], "n", lazy.spawn("emacs /home/gergeh/work/notes/projects.org")),
+
+    Key([mod], "i", lazy.spawn("emacsclient -e '(org-capture nil \"i\")'"), bring_group_to_front("Notes")),
     Key([mod], "v", lazy.spawn("pavucontrol")),
     Key([mod], "x", lazy.function(next_keyboard)),
 
@@ -85,25 +123,55 @@ keys = [
     Key([mod], "r", lazy.spawncmd()),
 ]
 
+group_names = [("WWW", {'layout': 'bsp'}, 0),
+                ("WWW2", {'layout': 'bsp'}, 1),
+               ("DEV", {'layout': 'treetab'}, 1),
+               ("CMD", {'layout': 'bsp'}, 0),
+               ("File", {'layout': 'treetab'}, 0),
+               ("Notes", {'layout': 'treetab'}, 1),
+               ("Misc", {'layout': 'treetab'}, 1),
+               ("VMWare1", {'layout': 'floating'}, 0),
+               ("VMware2", {'layout': 'floating'}, 1)] 
 
-group_names = [("WWW", {'layout': 'bsp'}),
-                ("WWW2", {'layout': 'bsp'}),
-               ("DEV", {'layout': 'treetab'}),
-               ("CMD", {'layout': 'bsp'}),
-               ("File", {'layout': 'treetab'}),
-               ("Misc", {'layout': 'treetab'})] 
+groups = [Group(name, **kwargs) for name, kwargs,_ in group_names]
+screen_map = { name:screen_num for name, _,screen_num in group_names } 
 
-groups = [Group(name, **kwargs) for name, kwargs in group_names]
+@hook.subscribe.setgroup
+def record_screen_assignments():
+    try:
+        from libqtile import qtile
+    except ImportError as e:
+        logger.error(str(e))
+        return
+    for i,(name,_,_) in enumerate(group_names):
+        screen = client.group[name].info()['screen']
+        if screen is not None:
+            screen_map[name] = screen
+    logger.error('setgroup')
+    logger.error(screen_map)
 
-def bring_group_to_screen(group_id):
-    def callback(qtile):
-        qtile.group[group_id].toscreen()
-    return lazy.function(callback)
+@hook.subscribe.changegroup
+def record_screen_assignments2():
+    try:
+        from libqtile import qtile
+    except ImportError as e:
+        logger.error(str(e))
+        return
+    for i,(name,_,_) in enumerate(group_names):
+        screen = client.group[name].info()['screen']
+        if screen is not None:
+            screen_map[name] = screen
+    logger.error('changegroup')
+    logger.error(screen_map)
 
-for i, (name, kwargs) in enumerate(group_names, 1):
-    keys.append(Key([mod], str(i), bring_group_to_screen(name)))        # Switch to another group
+
+
+
+for i, group_t in enumerate(group_names, 1):
+    name, kwargs, _ = group_t
 #    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))        # Switch to another group
-    keys.append(Key([mod, "shift"], str(i), lazy.group[name].bring_to_front()))# Send current window to another group
+    keys.append(Key([mod], str(i), bring_group_to_front(name)))# Send current window to another group
+    keys.append(Key([mod, "shift"], str(i), bring_group_to_screen(i-1)))        # Switch to another group
     keys.append(Key([mod, "control"], str(i), lazy.window.togroup(name))) # Send current window to another group
 
 
@@ -185,7 +253,7 @@ auto_fullscreen = True
 focus_on_window_activation = "smart"
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
-# string besides java UI toolkits; you can see several discussions on the
+# string besides java UI toolkits; you can see sevSdDZxHOF%e7hkGeral discussions on the
 # mailing lists, GitHub issues, and other WM documentation that suggest setting
 # this string if your java app doesn't work correctly. We may as well just lie
 # and say that we're a working one by default.

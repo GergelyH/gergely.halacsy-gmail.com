@@ -3,6 +3,7 @@
 (setq org-agenda-files '("~/work/notes/inbox.org"
                           "~/work/notes/gtd.org"
                           "~/work/notes/tickler.org"
+                          "~/work/notes/projects.org"
                           "~/work/notes/schedule.org"))
 (setq org-directory "~/work/notes")
 ;; (setq +todo-file "~/org/todo.org"
@@ -23,7 +24,7 @@
   ;; (evil-insert-newline-below)
   ;; (evil-previous-line)
   ;; (org-expiry-insert-created)
-  (org-schedule "" "")
+  ;; (org-schedule "" "")
   (org-back-to-heading)
   (org-end-of-line)
   (insert " ")
@@ -68,7 +69,7 @@
 ;;   )
 
 
-(setq org-bullets-bullet-list '("#"))
+(setq org-bullets-bullet-list '("►"))
 
 
 
@@ -81,9 +82,10 @@
                                 "* %i%? \n %U")))
 
 ;;(setq org-outline-path-complete-in-steps nil)
-(setq org-refile-targets '(("~/Dropbox/notes/gtd.org" :maxlevel . 3)
-                            ("~/Dropbox/notes/someday.org" :level . 1)
-                            ("~/Dropbox/notes/tickler.org" :maxlevel . 2)))
+(setq org-refile-targets '(("~/work/notes/notes.org" :maxlevel . 3)
+                            ("~/work/notes/references.org" :maxlevel . 3)
+                            ("~/work/notes/someday.org" :maxlevel . 2)
+                            ("~/work/notes/tickler.org" :maxlevel . 2)))
 ;; (setq org-agenda-custom-commands
       ;; '(("o" "At the office" tags-todo "@office"
          ;; ((org-agenda-overriding-header "Office")
@@ -168,16 +170,3 @@ are equal return t."
   (org-agenda-redo))
 
 (setq org-super-agenda-header-map (make-sparse-keymap))
-
-(require 'org-gcal)
-
-
-
-(setq org-gcal-client-id "734202814987-1q1s695v0vd53r4b7c3kdoie8f6c59u2.apps.googleusercontent.com"
-      org-gcal-client-secret "Wwr7Iko59OsjFadDyVQg6nLR"
-      org-gcal-file-alist '(("gergely.halacsy@gmail.com" .  "~/Dropbox/notes/schedule.org")
-                            ))
-;; (setq org-gcal-client-id "860972419948-hf9cqea7qhrjh5v6161hh62nsa5vmu05.apps.googleusercontent.com"
-;;       org-gcal-client-secret "fgPsL-v_CY783qLIKuRHqgMr"
-;;       org-gcal-file-alist '(("gergely.halacsy@gmail.com" .  "~/Dropbox/notes/schedule.org")
-;;                             ))

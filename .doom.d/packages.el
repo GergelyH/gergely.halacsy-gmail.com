@@ -49,12 +49,5 @@
 ;; This is required for some packages whose default branch isn't 'master' (which
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
-(package! multi-term)
 (package! org-super-agenda)
-(package! command-log-mode
-  :recipe (:host github :repo "lewang/command-log-mode"
-           :files ("command-log-mode.el")))
-(package! focus-autosave-mode)
-(package! jupyter)
-(package! pynt)
-(package! elpy)
+(package! focus-autosave-mode )
