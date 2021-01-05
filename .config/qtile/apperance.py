@@ -29,8 +29,8 @@ BAR_HEIGHT = 20
 
 def top_bar():
     return bar.Bar([
-        widget.spacer.Spacer(),
-        widget.systray.Systray(),
+        widget.Spacer(),
+        widget.Systray(),
         widget.Clock(
             format='%b-%d %a %H:%M'
         ),
@@ -39,19 +39,19 @@ def top_bar():
                     background=colors['deep-blue'],
                    )
 
-keyboard_widget = widget.keyboardlayout.KeyboardLayout(configured_keyboards=['us','hu'])
+keyboard_widget = widget.KeyboardLayout(configured_keyboards=['us','hu'])
 
 def bottom_bar():
     return bar.Bar([
-        widget.graph.HDDBusyGraph(device='nvme0n1p1'),
-        widget.cpu.CPU(format='CPU {load_percent}%'),
+        widget.HDDBusyGraph(device='nvme0n1p1'),
+        widget.CPU(format='CPU {load_percent}%'),
         memory_widget.Memory(),
-        widget.net.Net(format='{down} ↓↑ {up}'),
-        widget.check_updates.CheckUpdates(custom_command="checkupdates"),
-        widget.keyboardlayout.KeyboardLayout(configured_keyboards=['us','hu']),
-        widget.spacer.Spacer(),
-        widget.groupbox.GroupBox(inactive=colors['very-soft-red']),
-        widget.prompt.Prompt(),
+        widget.Net(format='{down} ↓↑ {up}'),
+        widget.CheckUpdates(custom_command="checkupdates"),
+        widget.KeyboardLayout(configured_keyboards=['us','hu']),
+        widget.Spacer(),
+        widget.GroupBox(inactive=colors['very-soft-red']),
+        widget.Prompt(),
     ],
                    size=BAR_HEIGHT,
                     background=colors['deep-blue'],

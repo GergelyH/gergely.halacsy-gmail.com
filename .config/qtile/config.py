@@ -104,10 +104,10 @@ keys = [
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
     Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
-    Key([mod], "Return", lazy.spawn("termite --exec='/bin/zsh'")),
+    Key([mod], "Return", lazy.spawn("kitty -e '/bin/zsh'")),
     Key([mod], "c", lazy.spawn("chromium")),
-    Key([mod], "e", lazy.spawn("code")),
-    Key([mod], "f", lazy.spawn("termite --exec='ranger'")),
+    Key([mod], "e", lazy.spawn("kitty -e 'nvim'")),
+    Key([mod], "f", lazy.spawn("kitty -e 'ranger'")),
     Key([mod], "n", lazy.spawn("emacs /home/gergeh/work/notes/projects.org")),
 
     Key([mod], "i", lazy.spawn("emacsclient -e '(org-capture nil \"i\")'"), bring_group_to_front("Notes")),
@@ -125,10 +125,10 @@ keys = [
 
 group_names = [("WWW", {'layout': 'bsp'}, 0),
                 ("WWW2", {'layout': 'bsp'}, 1),
-               ("DEV", {'layout': 'treetab'}, 1),
+               ("DEV", {'layout': 'max'}, 1),
                ("CMD", {'layout': 'bsp'}, 0),
                ("File", {'layout': 'treetab'}, 0),
-               ("Notes", {'layout': 'treetab'}, 1),
+               ("Notes", {'layout': 'max'}, 1),
                ("Misc", {'layout': 'treetab'}, 1),
                ("VMWare1", {'layout': 'floating'}, 0),
                ("VMware2", {'layout': 'floating'}, 1)] 
@@ -212,6 +212,7 @@ layouts = [
          panel_width = 200,
          ),
     layout.Floating(**layout_theme),
+    layout.Max()
 ]
 
 screens = [
