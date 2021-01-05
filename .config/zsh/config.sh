@@ -40,3 +40,6 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 set -o vi
+
+export FZF_DEFAULT_OPTS='--layout=reverse --inline-info'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/**"'
