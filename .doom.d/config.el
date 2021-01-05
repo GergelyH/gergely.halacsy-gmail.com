@@ -38,7 +38,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'visual)
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -121,3 +121,8 @@
 ;; (defalias 'display-buffer-in-major-side-window 'window--make-major-side-window)
 (load! "+org")
 (load! "+functions")
+
+(map! "C-j" #'evil-window-down)
+(map! "C-k" #'evil-window-up)
+(map! "C-h" #'evil-window-left)
+(map! "C-l" #'evil-window-right)

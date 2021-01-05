@@ -1,4 +1,7 @@
 
+(defun sync-google-calendar()
+  (interactive)
+  (call-process "python" nil '(:file "~/work/emacs_sync/emacs_log.txt") nil "/home/gergeh/work/emacs_sync/sync.py" ))
 ;;;  -*- lexical-binding: t; -*-
 (setq org-agenda-files '("~/work/notes/inbox.org"
                           "~/work/notes/gtd.org"
@@ -23,11 +26,11 @@
   "Insert a CREATED property using org-expiry.el for TODO entries"
   ;; (evil-insert-newline-below)
   ;; (evil-previous-line)
-  ;; (org-expiry-insert-created)
+  (org-expiry-insert-created)
   ;; (org-schedule "" "")
-  (org-back-to-heading)
-  (org-end-of-line)
-  (insert " ")
+  ;; (org-back-to-heading)
+  ;; (org-end-of-line)
+  ;; (insert " ")
 )
 
 ;; Whenever a TODO entry is created, I want a timestamp
@@ -73,18 +76,19 @@
 
 
 
-(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "PARTIAL(p)" "RECURRING(r)" "AFTER(a)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "Long(l)" "|" "DONE(d)" "CANCELLED(c)")))
 (setq org-capture-templates '(("i" "inbox" entry
-                                (file+headline "~/Dropbox/notes/inbox.org" "Tasks")
+                                (file "~/work/notes/inbox.org")
                               "* %i%?")
                               ("T" "Tickler" entry
-                                (file+headline "~/Dropbox/notes/tickler.org" "Tickler")
+                                (file+headline "~/work/notes/tickler.org" "Tickler")
                                 "* %i%? \n %U")))
 
 ;;(setq org-outline-path-complete-in-steps nil)
 (setq org-refile-targets '(("~/work/notes/notes.org" :maxlevel . 3)
                             ("~/work/notes/references.org" :maxlevel . 3)
                             ("~/work/notes/someday.org" :maxlevel . 2)
+                            ("~/work/notes/projects.org":maxlevel . 4)
                             ("~/work/notes/tickler.org" :maxlevel . 2)))
 ;; (setq org-agenda-custom-commands
       ;; '(("o" "At the office" tags-todo "@office"
@@ -94,9 +98,6 @@
 (defun org-current-is-todo ()
   (string= "TODO" (org-get-todo-state)))
 
-(setq org-agenda-custom-commands
-      '(("o" "At the office" tags-todo "@office"
-         ((org-agenda-overriding-header "Office")))))
 
 (defun org-agenda-reverse-time-sort (a b)
   "Compare two `org-mode' agenda entries, `A' and `B', by some date property.
@@ -121,34 +122,134 @@ are equal return t."
     )
     ))
 
+(setq org-agenda-custom-commands
+      '(("d" "DEL"
+         ((tags-todo "del")
+          (tags-todo "-{^.+}"))
+         ((org-agenda-overriding-header "DEL")
+        (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+        (org-agenda-sorting-strategy '(user-defined-up))))))
+
 (add-to-list 'org-agenda-custom-commands
-             '("b" "Tasks Overview"
+             '("t" "Todos"
                ((todo "TODO")
-                (todo "PARTIAL")
-                (todo "RECURRING"))
+                )
                ((org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
                 (org-agenda-sorting-strategy '(user-defined-up)))))
 
 (add-to-list 'org-agenda-custom-commands
-                   '("d" "Day view" agenda ""
-         (
-          ;; a slower way to do the same thing
-          ;; (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-          (org-agenda-span 1)
-          (org-agenda-start-day (org-today))
-        )))
+             '("c" "Calendar" (
+                               (agenda ""
+                                        ((org-agenda-span 2)                          ;; [1]
+                                        (org-agenda-start-on-weekday nil)               ;; [2]
+                                        (org-agenda-start-day "0d")               ;; [2]
+                                        (org-agenda-time-grid nil)
+                                        (org-agenda-repeating-timestamp-show-all t)   ;; [3]
+                                        (org-agenda-entry-types '(:timestamp :sexp)))
+                                        )
+                               (todo "WAITING")
+                               )
+               )  ;; [4]
+                                ;; other commands go here
+)
 
-(org-super-agenda-mode t)
+(add-to-list 'org-agenda-custom-commands
+             '("g" "General view" (
+                               (agenda "" ((org-agenda-span 2) (org-agenda-start-on-weekday nil) (org-agenda-start-day "0d") (org-agenda-entry-types '(:timestamp)) ))
+                ;;                (todo "LONG" (
+                ;; (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                ;; (org-agenda-sorting-strategy '(user-defined-up))))
+                ;;                (todo "TODO" (
+                ;; (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                ;; (org-agenda-sorting-strategy '(user-defined-up))))
+                               (todo "WAITING" (
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up))))
+                               )
+                ))
+
+(add-to-list 'org-agenda-custom-commands
+             '("pc" "City"
+                ((tags-todo "city")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "City")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("pa" "Applications"
+                ((tags-todo "applications")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Applications")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("pe" "Entrepreneurship"
+                ((tags-todo "entrepreneurship")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Entrepreneurship")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("ps" "Software engineering"
+                ((tags-todo "sfe")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Software engineering")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("ph" "Home"
+                ((tags-todo "home")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Home")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("pd" "Del"
+                ((tags-todo "del")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Del")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("pb" "Body"
+                ((tags-todo "body")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Body")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("pm" "Materialistic"
+                ((tags-todo "materialistic")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Materialistic")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("pl" "Leisure"
+                ((tags-todo "leisure")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Leisure")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+(add-to-list 'org-agenda-custom-commands
+             '("pi" "Self improvement"
+                ((tags-todo "self_improvement")
+                (tags-todo "-{^.+}"))
+                ((org-agenda-overriding-header "Self improvement")
+                (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                (org-agenda-sorting-strategy '(user-defined-up)))))
+
+(org-super-agenda-mode nil)
 (setq org-super-agenda-groups
        '(;; Each group has an implicit boolean OR operator between its selectors.
-         (:name "Today"  ; Optionally specify section name
+         (:name "Day"  ; Optionally specify section name
                 :time-grid t)  ; Items that have this TODO keyword
-         (:name "Todos"  ; Optionally specify section name
-                :todo "TODO")  ; Items that have this TODO keyword
-         (:name "Partials"
-                :todo "PARTIAL")
-         (:name "Recurring"
-                :todo "RECURRING"
+         ;; (:name "Todos"  ; Optionally specify section name
+         ;;        :todo "TODO")  ; Items that have this TODO keyword
+         (:name "Long tasks"
+                :todo "LONG")
+         (:name "Waiting for "
+                :todo "WAITING"
                 ))
 )
 (setq org-shift-today-by-days 0)
@@ -170,3 +271,5 @@ are equal return t."
   (org-agenda-redo))
 
 (setq org-super-agenda-header-map (make-sparse-keymap))
+
+(setq org-agenda-sticky 1)
