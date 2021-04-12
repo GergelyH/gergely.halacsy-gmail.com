@@ -87,6 +87,23 @@
 ;; Company
 (setq company-idle-delay 0.05)
 
+(defun startup () 
+  "Opens 8 files in different windows" 
+  (interactive) 
+  (delete-other-windows) 
+  (find-file  "/home/gergeh/work/notes/inbox.org")
+  (split-window-horizontally)
+  (other-window 1)
+  (find-file "/home/gergeh/work/notes/projects.org") 
+  (split-window-horizontally)
+  (other-window 1)
+  (balance-windows)
+)
+; (defun view-files-in-windows ()
+;   (ibuffer)                      ; Activate ibuffer mode.
+;   (ibuffer-mark-special-buffers) ; Mark the special buffers.
+;   (ibuffer-toggle-marks)         ; Toggle buffers, leaving the non-special ones
+;   (ibuffer-do-view))             ; Show each buffer in a different window.
 ;; Tabbing
 ;;
 ;;

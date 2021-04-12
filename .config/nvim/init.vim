@@ -43,7 +43,6 @@ Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
 Plug 'liuchengxu/vim-which-key'
 Plug 'luochen1990/rainbow'
 Plug 'psliwka/vim-smoothie'
@@ -53,7 +52,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'jupyter-vim/jupyter-vim'
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
-Plug 'liuchengxu/vista.vim'
+Plug 'itchyny/calendar.vim'
 " Plug '907th/vim-auto-save'
 
 call plug#end()
@@ -66,8 +65,10 @@ source $HOME/.config/nvim/plug-config/rainbow.vim
 source $HOME/.config/nvim/plug-config/airline.vim
 source $HOME/.config/nvim/plug-config/jupyter-vim.vim
 source $HOME/.config/nvim/plug-config/vimspector.vim
+source $HOME/.config/nvim/plug-config/calendar.vim
 source $HOME/.config/nvim/keys/keys.vim
 source $HOME/.config/nvim/keys/which-key.vim
+source $HOME/.cache/calendar.vim/credentials.vim
 
 colorscheme gruvbox
 set background=dark

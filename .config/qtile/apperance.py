@@ -14,7 +14,7 @@ colors = {'dark-grey-blue':'2e3440',
           'very-soft-red':'e0aca2',
           'deep-blue':'30345F'}
 
-import memory_widget
+# import memory_widget
 widget_defaults = dict(
     font='Fira Mono',
     fontsize=14,
@@ -45,9 +45,9 @@ def bottom_bar():
     return bar.Bar([
         widget.HDDBusyGraph(device='nvme0n1p1'),
         widget.CPU(format='CPU {load_percent}%'),
-        memory_widget.Memory(),
+        # memory_widget.Memory(),
         widget.Net(format='{down} ↓↑ {up}'),
-        widget.CheckUpdates(custom_command="checkupdates"),
+        # widget.CheckUpdates(custom_command="checkupdates"),
         widget.KeyboardLayout(configured_keyboards=['us','hu']),
         widget.Spacer(),
         widget.GroupBox(inactive=colors['very-soft-red']),

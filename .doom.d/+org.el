@@ -52,6 +52,32 @@
     (mrb/insert-created-timestamp)))
 (ad-activate 'org-capture)
 
+(defun capture-to-inbox ()
+  (interactive)
+  (org-capture nil "i"))
+;; (defadvice org-capture-finalize
+;;      (after delete-capture-frame activate)
+;;    "Advise capture-finalize to close the frame"
+;;    (if (equal "capture" (frame-parameter nil 'name))
+;;        (delete-frame)))
+
+;;  (defadvice org-capture-destroy
+;;      (after delete-capture-frame activate)
+;;    "Advise capture-destroy to close the frame"
+;;    (if (equal "capture" (frame-parameter nil 'name))
+;;        (delete-frame)))
+
+;;  (use-package noflet
+;;     :ensure t )
+;; (defun make-capture-frame ()
+;;    "Create a new frame and run org-capture."
+;;    (interactive)
+;;    (make-frame '((name . "capture")))
+;;    (select-frame-by-name "capture")
+;;    (delete-other-windows)
+;;    (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
+;;            (org-capture)))
+
 ;; Add feature to allow easy adding of tags in a capture window
 (defun mrb/add-tags-in-capture()
   (interactive)
@@ -76,7 +102,7 @@
 
 
 
-(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "Long(l)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "Activity(l)" "|" "DONE(d)" "CANCELLED(c)")))
 (setq org-capture-templates '(("i" "inbox" entry
                                 (file "~/work/notes/inbox.org")
                               "* %i%?")
@@ -152,15 +178,16 @@ are equal return t."
                )  ;; [4]
                                 ;; other commands go here
 )
+;; (org-capture nil "i")
 
 (add-to-list 'org-agenda-custom-commands
              '("g" "General view" (
                                (agenda "" ((org-agenda-span 2) (org-agenda-start-on-weekday nil) (org-agenda-start-day "0d") (org-agenda-entry-types '(:timestamp)) ))
-                ;;                (todo "LONG" (
+                ;;                (todo "Activity" (
                 ;; (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
                 ;; (org-agenda-sorting-strategy '(user-defined-up))))
                 ;;                (todo "TODO" (
-                ;; (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
+                ;; (org-agenda-cmp-user-defined 'Org-agenda-reverse-time-sort)
                 ;; (org-agenda-sorting-strategy '(user-defined-up))))
                                (todo "WAITING" (
                 (org-agenda-cmp-user-defined 'org-agenda-reverse-time-sort)
@@ -246,8 +273,8 @@ are equal return t."
                 :time-grid t)  ; Items that have this TODO keyword
          ;; (:name "Todos"  ; Optionally specify section name
          ;;        :todo "TODO")  ; Items that have this TODO keyword
-         (:name "Long tasks"
-                :todo "LONG")
+         (:name "Activity tasks"
+                :todo "Activity")
          (:name "Waiting for "
                 :todo "WAITING"
                 ))
@@ -273,3 +300,44 @@ are equal return t."
 (setq org-super-agenda-header-map (make-sparse-keymap))
 
 (setq org-agenda-sticky 1)
+
+(setq org-archive-location "~/work/notes/archive/%s::")
+
+(defun org-agenda-subtree-or-region (prefix)
+  "Display an agenda view for the current subtree or region.
+With prefix, display only TODO-keyword items."
+  (interactive "p")
+  (let (header)
+    (if (use-region-p)
+        (progn
+          (setq header "Region")
+          (put 'org-agenda-files 'org-restrict (list (buffer-file-name (current-buffer))))
+          (setq org-agenda-restrict (current-buffer))
+          (move-marker org-agenda-restrict-begin (region-beginning))
+          (move-marker org-agenda-restrict-end
+                       (save-excursion
+                         (goto-char (1+ (region-end))) ; If point is at pos 0, include heading on that line
+                         (org-end-of-subtree))))
+      (progn
+        ;; No region; restrict to subtree
+        (setq header "Subtree")
+        (org-agenda-set-restriction-lock 'subtree)))
+
+    ;; sorting doesn't seem to be working, but the header is
+    (let ((org-agenda-sorting-strategy '(priority-down timestamp-up))
+          (org-agenda-overriding-header header))
+      (org-search-view t "*"))
+    (org-agenda-remove-restriction-lock t)
+    (message nil)))
+
+(defun org-info-open-new-window (path)
+  "Open info in a new buffer"
+  (setq available-windows
+        (delete (selected-window) (window-list)))
+  (setq new-window
+         (or (car available-windows)
+             (split-window-sensibly)
+             (split-window-right)))
+  (select-window new-window)
+  (org-info-follow-link path))
+(org-link-set-parameters "info" :follow #'org-info-open-new-window)

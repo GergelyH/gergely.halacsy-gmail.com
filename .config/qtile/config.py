@@ -23,7 +23,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+import nest_asyncio
+nest_asyncio.apply()
 from typing import List  # noqa: F401
 import os
 import sys
@@ -48,6 +49,7 @@ from debug_logging import logger
 # run("xrandr --output DVI-D-1 --mode 1600x1200 --left-of HDMI-2 --output HDMI-2 --mode 2560x1080 --output HDMI-1 --mode 1920x1080 --right-of HDMI-2")
 
 mod = "mod4"
+alt = 'mod1'
 username = "gergeh"
 
 def bring_group_to_front(group_name):
@@ -82,37 +84,37 @@ def bring_group_to_screen(group_index):
 
 keys = [
     # Switch between windows in current stack pane
-    Key([mod], "j", lazy.layout.down()),
-    Key([mod], "k", lazy.layout.up()),
-    Key([mod], "h", lazy.layout.left()),
-    Key([mod], "l", lazy.layout.right()),
+    Key([alt], "j", lazy.layout.down()),
+    Key([alt], "k", lazy.layout.up()),
+    Key([alt], "h", lazy.layout.left()),
+    Key([alt], "l", lazy.layout.right()),
 
     # Move windows up or down in current stack
-    Key([mod, "control"], "j", lazy.layout.shuffle_down()),
-    Key([mod, "control"], "k", lazy.layout.shuffle_up()),
-    Key([mod, "control"], "h", lazy.layout.shuffle_left()),
-    Key([mod, "control"], "l", lazy.layout.shuffle_right()),
+    Key([alt, "control"], "j", lazy.layout.shuffle_down()),
+    Key([alt, "control"], "k", lazy.layout.shuffle_up()),
+    Key([alt, "control"], "h", lazy.layout.shuffle_left()),
+    Key([alt, "control"], "l", lazy.layout.shuffle_right()),
 
     # Switch window focus to other pane(s) of stack
-    Key([mod], "space", lazy.layout.next()),
+    Key([alt], "space", lazy.layout.next()),
 
     # Swap panes of split stack
-    Key([mod, "shift"], "space", lazy.layout.rotate()),
+    Key([alt, "shift"], "space", lazy.layout.rotate()),
 
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-    Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
+    Key([alt, "shift"], "Return", lazy.layout.toggle_split()),
     Key([mod], "Return", lazy.spawn("kitty -e '/bin/zsh'")),
-    Key([mod], "c", lazy.spawn("chromium")),
+    Key([mod], "b", lazy.spawn("firefox")),
     Key([mod], "e", lazy.spawn("kitty -e 'nvim'")),
-    Key([mod], "f", lazy.spawn("kitty -e 'ranger'")),
-    Key([mod], "n", lazy.spawn("emacs /home/gergeh/work/notes/projects.org")),
+    Key([mod], "r", lazy.spawn("kitty -e 'ranger'")),
+    Key([mod], "n", lazy.spawn('emacs /home/gergeh/work/notes/projects.org --eval "(startup)"')),
 
-    Key([mod], "i", lazy.spawn("emacsclient -e '(org-capture nil \"i\")'"), bring_group_to_front("Notes")),
-    Key([mod], "v", lazy.spawn("pavucontrol")),
-    Key([mod], "x", lazy.function(next_keyboard)),
+    Key([mod], "i", lazy.spawn('emacsclient -e "(capture-to-inbox)"'), bring_group_to_front("Notes")),
+    Key([mod], "v", lazy.spawn("vmware-view")),
+    Key([mod,'shift'], "x", lazy.function(next_keyboard)),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout()),
@@ -123,18 +125,18 @@ keys = [
     Key([mod], "r", lazy.spawncmd()),
 ]
 
-group_names = [("WWW", {'layout': 'bsp'}, 0),
-                ("WWW2", {'layout': 'bsp'}, 1),
-               ("DEV", {'layout': 'max'}, 1),
-               ("CMD", {'layout': 'bsp'}, 0),
-               ("File", {'layout': 'treetab'}, 0),
-               ("Notes", {'layout': 'max'}, 1),
-               ("Misc", {'layout': 'treetab'}, 1),
-               ("VMWare1", {'layout': 'floating'}, 0),
-               ("VMware2", {'layout': 'floating'}, 1)] 
+group_names = [("WWW", {'layout': 'bsp'}, 0,'a'),
+            ("WWW2", {'layout': 'bsp'}, 1,'s'),
+            ("DEV", {'layout': 'max','spawn':'kitty -e "nvim"'}, 1,'d'),
+            ("CMD", {'layout': 'bsp','spawn':'kitty'}, 0,'f'),
+            ("File", {'layout': 'treetab','spawn':'kitty -e "ranger"'}, 0,'g'),
+            ("Notes", {'layout': 'max','spawn':'emacs /home/gergeh/work/notes/projects.org --eval "(startup)"'}, 1, 'h'),
+               ("Misc", {'layout': 'treetab'}, 1, 'j'),
+               ("VMWare1", {'layout': 'floating'}, 0, 'k'),
+               ("VMware2", {'layout': 'floating'}, 1, 'l')] 
 
-groups = [Group(name, **kwargs) for name, kwargs,_ in group_names]
-screen_map = { name:screen_num for name, _,screen_num in group_names } 
+groups = [Group(name, **kwargs) for name, kwargs,_,_ in group_names]
+screen_map = { name:screen_num for name, _,screen_num,_ in group_names } 
 
 @hook.subscribe.setgroup
 def record_screen_assignments():
@@ -143,7 +145,7 @@ def record_screen_assignments():
     except ImportError as e:
         logger.error(str(e))
         return
-    for i,(name,_,_) in enumerate(group_names):
+    for i,(name,_,_,_) in enumerate(group_names):
         screen = client.group[name].info()['screen']
         if screen is not None:
             screen_map[name] = screen
@@ -157,7 +159,7 @@ def record_screen_assignments2():
     except ImportError as e:
         logger.error(str(e))
         return
-    for i,(name,_,_) in enumerate(group_names):
+    for i,(name,_,_,_) in enumerate(group_names):
         screen = client.group[name].info()['screen']
         if screen is not None:
             screen_map[name] = screen
@@ -168,11 +170,11 @@ def record_screen_assignments2():
 
 
 for i, group_t in enumerate(group_names, 1):
-    name, kwargs, _ = group_t
+    name, kwargs, _, letter = group_t
 #    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))        # Switch to another group
-    keys.append(Key([mod], str(i), bring_group_to_front(name)))# Send current window to another group
-    keys.append(Key([mod, "shift"], str(i), bring_group_to_screen(i-1)))        # Switch to another group
-    keys.append(Key([mod, "control"], str(i), lazy.window.togroup(name))) # Send current window to another group
+    keys.append(Key([mod], letter, bring_group_to_front(name)))# Send current window to another group
+    keys.append(Key([mod, "shift"], letter, bring_group_to_screen(i-1)))        # Switch to another group
+    keys.append(Key([mod, "control"], letter, lazy.window.togroup(name))) # Send current window to another group
 
 
 def current_window_to_screen_lazy_callback(screen_num:int):
@@ -180,12 +182,12 @@ def current_window_to_screen_lazy_callback(screen_num:int):
         qtile.current_window.toscreen(screen_num)
     return lazy.function(callback)
 
-for i,key in enumerate("asd"):
+for i,key in enumerate("zxc"):
     keys.extend([
-        # mod1 + letter of group = switch to group
+        # alt + letter of group = switch to group
         Key([mod], key, lazy.to_screen(i)),
 
-        # mod1 + shift + letter of group = switch to & move focused window to group
+        # alt + shift + letter of group = switch to & move focused window to group
         # Key([mod, "shift"], key, lazy.window.toscreen(i))
     ])
 
@@ -223,9 +225,9 @@ screens = [
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
          start=lazy.window.get_position()),
-    Drag([mod], "Button3", lazy.window.set_size_floating(),
-         start=lazy.window.get_size()),
-    Click([mod], "Button2", lazy.window.bring_to_front())
+    # Drag([mod], "Button3", lazy.window.set_size_floating(),
+    #      start=lazy.window.get_size()),
+    # Click([mod], "Button2", lazy.window.bring_to_front())
 ]
 
 dgroups_key_binder = None
@@ -251,7 +253,7 @@ floating_layout = layout.Floating(float_rules=[
     {'wmclass': 'ssh-askpass'},  # ssh-askpass
 ])
 auto_fullscreen = True
-focus_on_window_activation = "smart"
+focus_on_window_activation = "focus"
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
 # string besides java UI toolkits; you can see sevSdDZxHOF%e7hkGeral discussions on the
