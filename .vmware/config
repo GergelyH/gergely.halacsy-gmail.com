@@ -1,0 +1,7 @@
+xkeymap.nokeycodeMap = true
+xkeymap.keycode.105 = 0x138
+xkeymap.keycode.108 = 0x11d
+# xkeymap.usekeycodeMapIfXFree86 = true
+# xkeymap.keysym.Caps_Lock = 0x001
+# xkeymap.keysym.Escape = 0x03a
+# xkeymap.keysym.Alt_R = 0x11d

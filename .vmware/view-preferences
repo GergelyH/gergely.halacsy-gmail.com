@@ -1,0 +1,6 @@
+view.allowSslProxy = 'FALSE'
+view.defaultBroker = 'desktop.europe.citi.com'
+view.deviceID = '70:85:C2:C5:0E:26'
+view.reconnection = 'FALSE'
+view.usbAutoConnectAtStartUp = 'TRUE'
+view.usbAutoConnectOnInsert = 'TRUE'
