@@ -1,5 +1,6 @@
 view.allowSslProxy = 'FALSE'
 view.defaultBroker = 'desktop.europe.citi.com'
+view.desktop_monitors = '1,2'
 view.deviceID = '70:85:C2:C5:0E:26'
 view.reconnection = 'FALSE'
 view.usbAutoConnectAtStartUp = 'TRUE'

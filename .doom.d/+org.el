@@ -102,7 +102,7 @@
 
 
 
-(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "Activity(l)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "INNER(i)" "WAITING(w)" "Activity(l)" "|" "DONE(d)" "CANCELLED(c)")))
 (setq org-capture-templates '(("i" "inbox" entry
                                 (file "~/work/notes/inbox.org")
                               "* %i%?")

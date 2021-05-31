@@ -1,4 +1,15 @@
 export VISUAL='nvim'
-export EDITOR='edit'
+export EDITOR='nvim'
 export ANDROID_SDK_ROOT='/opt/android-sdk'
-export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$ANDROID_HOME/emulator:$PATH
+# export PATH=$PATH:$ANDROID_HOME/emulator
+# export PATH=$PATH:$ANDROID_HOME/platform-tools/
+# export PATH=$PATH:$ANDROID_HOME/tools/bin/
+# export PATH=$PATH:$ANDROID_HOME/tools/
+export JAVA_HOME='/usr/lib/jvm/java-8-openjdk'
+export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions'
+
+export NNN_BMS='d:~/Documents;u:/home/user/Cam Uploads;D:~/Downloads/'
+export NNN_SSHFS="sshfs -o follow_symlinks"        # make sshfs follow symlinks on the remote
+export NNN_COLORS="2136"                           # use a different color for each context
+export NNN_TRASH=1                                 # trash (needs trash-cli) instead of delete
