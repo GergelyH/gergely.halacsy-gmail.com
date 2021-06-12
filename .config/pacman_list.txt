@@ -1,7 +1,6 @@
 bluetooth-support
 brave
 emacs
-flutter
 kitty
 lua
 ninja
@@ -11,7 +10,6 @@ npm
 opendoas
 pavucontrol
 powerline
-pulseaudio-modules-bt
 qbittorrent
 ripgrep
 tmux
@@ -24,7 +22,6 @@ ttf-liberation
 unzip
 util-linux
 virt-manager
-vlc
 xclip
 yay
 zip
