@@ -17,7 +17,6 @@ Rows=1
 NoiseStrength=0
 
 [Effect-CoverSwitch]
-TabBox=true
 zPosition=815
 
 [ModifierOnlyShortcuts]
@@ -25,9 +24,7 @@ Meta=org.kde.lattedock,/Latte,org.kde.LatteDock,activateLauncherMenu
 
 [Plugins]
 blurEnabled=true
-coverswitchEnabled=true
 cubeslideEnabled=true
-flipswitchEnabled=true
 force-decorations-gtk3Enabled=false
 forceblurEnabled=true
 hide-titlesEnabled=false
@@ -47,9 +44,10 @@ wobblywindowsEnabled=true
 patterns=yakuake\nurxvt\nkeepassxc\nAlacritty\nSpotify
 
 [TabBox]
+ApplicationsMode=1
 DesktopLayout=org.kde.breeze.desktop
 DesktopListLayout=org.kde.breeze.desktop
-LayoutName=coverswitch
+LayoutName=present_windows
 TouchBorderActivate=9
 
 [Windows]

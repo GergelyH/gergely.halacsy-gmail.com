@@ -5,6 +5,7 @@ switch-to-activity-5f06d6dd-e99b-4319-8b69-3fac530efb9f=none,none,Switch to acti
 
 [KDE Keyboard Layout Switcher]
 Switch keyboard layout to English (US)=none,none,Switch keyboard layout to English (US)
+Switch keyboard layout to Hungarian=none,none,Switch keyboard layout to Hungarian
 Switch keyboard layout to Hungarian (QWERTY)=none,none,Switch keyboard layout to Hungarian (QWERTY)
 Switch keyboard layout to Hungarian (QWERTY, 101-key, comma, no dead keys)=none,none,Switch keyboard layout to Hungarian (QWERTY\\, 101-key\\, comma\\, no dead keys)
 Switch to Next Keyboard Layout=Alt+O,none,Switch to Next Keyboard Layout
@@ -40,6 +41,11 @@ increase_microphone_volume=Microphone Volume Up,Microphone Volume Up,Increase Mi
 increase_volume=Volume Up,Volume Up,Increase Volume
 mic_mute=Microphone Mute,Microphone Mute\tMeta+Volume Mute,Mute Microphone
 mute=Volume Mute,Volume Mute,Mute
+
+[krunner.desktop]
+RunClipboard=,Alt+Shift+F2,Run command on clipboard contents
+_k_friendly_name=KRunner
+_launch=\t\t,Alt+Space\tAlt+F2\tSearch,KRunner
 
 [ksmserver]
 Halt Without Confirmation=Ctrl+Alt+Shift+PgDown,none,Halt Without Confirmation
