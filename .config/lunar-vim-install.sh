@@ -82,7 +82,7 @@ cloneconfig() {
 	git clone https://github.com/ChristianChiarulli/lunarvim.git ~/.config/nvim
 	# mv $HOME/.config/nvim/init.lua $HOME/.config/nvim/init.lua.tmp
 	# mv $HOME/.config/nvim/utils/init.lua $HOME/.config/nvim/init.lua
-	nvim -u $HOME/.config/nvim/init.lua +PackerInstall
+    nvim -u $HOME/.config/nvim/init.lua -c 'PackerInstall' -c 'qa!'
 	# rm $HOME/.config/nvim/init.lua
 	# mv $HOME/.config/nvim/init.lua.tmp $HOME/.config/nvim/init.lua
 }
@@ -157,9 +157,11 @@ which node >/dev/null && echo "node installed, moving on..." || asktoinstallnode
 # install pynvim
 pip3 list | grep pynvim >/dev/null && echo "pynvim installed, moving on..." || installpynvim
 
-git clone https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-
+if [ -e "$HOME/.local/share/nvim/site/pack/packer/start/packer.nvim" ]; then
+	echo 'packer already installed'
+else
+	installpacker
+fi
 
 if [ -e "$HOME/.config/nvim/init.lua" ]; then
 	echo 'nvcode already installed'
