@@ -47,7 +47,7 @@ patterns=yakuake\nurxvt\nkeepassxc\nAlacritty\nSpotify
 ApplicationsMode=1
 DesktopLayout=org.kde.breeze.desktop
 DesktopListLayout=org.kde.breeze.desktop
-LayoutName=present_windows
+LayoutName=thumbnail_grid
 TouchBorderActivate=9
 
 [Windows]
