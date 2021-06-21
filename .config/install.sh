@@ -1,5 +1,6 @@
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 cd
+mkdir dotfiles
 config init
 # Delete TODO files herre
 
