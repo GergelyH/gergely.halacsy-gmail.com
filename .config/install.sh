@@ -1,5 +1,6 @@
-alias config='/usr/bin/git --gir-dir=$HOME/dotfiles/ --work-tree=$HOME'
+alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 cd
+config init
 # Delete TODO files herre
 
 sudo pacman -Rdd thermald
