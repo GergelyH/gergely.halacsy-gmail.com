@@ -1,11 +1,26 @@
+sudo pacman -Syyu
+# SSH
+ssh-keygen -t ed25519 -C "gergely.halacsy@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+sudo pacman -S xclip
+xclip -selection clipboard < ~/.ssh/id_ed25519.pub
+while true; do
+    read -p "Ssh keys has been added to the clipboard, please copy it to your github account" yn
+    case $yn in
+        [Yy]* ) make install; break;;
+        * ) echo "Please answer yes to continue";;
+    esac
+done
+
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 cd
 mkdir dotfiles
 config init
+git add remote origin git@github.com:GergelyH/linux-config.git
+git pull
 # Delete TODO files herre
 
-sudo pacman -Rdd thermald
-sudo pacman -Rdd auto-cpufreq-git
 sudo pacman-mirrors -f5 
 sudo pacman-key --populate archlinux chaotic
 sudo pacman-key --refresh-keys
@@ -13,13 +28,7 @@ sudo pacman-key --populate archlinux chaotic
 sudo pacman -Syyu --noconfirm
 cat .config/pacman_list.txt | xargs sudo pacman --noconfirm -S
 
-# SSH
-ssh-keygen -t ed25519 -C "gergely.halacsy@gmail.com"
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-sudo pacman -S xclip
-xclip -selection clipboard < ~/.ssh/id_ed25519.pub
-echo "Public ssh key has been copied to the clipboard, please navigate to github.com and paste it there"
+
 
 #NVIM
 sudo pacman -S python-pip
