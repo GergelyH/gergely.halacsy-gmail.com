@@ -1,3 +1,13 @@
+#!/bin/bash
+function yes_or_no {
+    while true; do
+        read -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0  ;;
+            [Nn]*) echo "Aborted" ; return  1 ;;
+        esac
+    done
+}
 sudo pacman -Syyu
 # SSH
 ssh-keygen -t ed25519 -C "gergely.halacsy@gmail.com"
@@ -5,13 +15,8 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 sudo pacman -S xclip
 xclip -selection clipboard < ~/.ssh/id_ed25519.pub
-while true; do
-    read -p "Ssh keys has been added to the clipboard, please copy it to your github account" yn
-    case $yn in
-        [Yy]* ) make install; break;;
-        * ) echo "Please answer yes to continue";;
-    esac
-done
+yes_or_no "Ssh keys has been added to the clipboard, please copy it to your github account"
+
 
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 cd
@@ -21,14 +26,7 @@ git add remote origin git@github.com:GergelyH/linux-config.git
 git pull
 # Delete TODO files herre
 
-sudo pacman-mirrors -f5 
-sudo pacman-key --populate archlinux chaotic
-sudo pacman-key --refresh-keys
-sudo pacman-key --populate archlinux chaotic
-sudo pacman -Syyu --noconfirm
 cat .config/pacman_list.txt | xargs sudo pacman --noconfirm -S
-
-
 
 #NVIM
 sudo pacman -S python-pip
