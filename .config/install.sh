@@ -21,9 +21,12 @@ yes_or_no "Ssh keys has been added to the clipboard, please copy it to your gith
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 cd
 mkdir dotfiles
-config init
-git add remote origin git@github.com:GergelyH/linux-config.git
-git pull
+/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME init
+/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME add remote origin git@github.com:GergelyH/linux-config.git
+rm .bash_profile .bashrc .config/kdeconnect/certificate.pem .config/kdeconnect/config .config/kdeconnect/privateKey.pem
+rm .config/kded5rc .config/kdeglobals .config/kglobalshortcutsrc .config/khotkeysrc
+rm .config/kwinrc .profile .vmware/view-brokers-prefs .vmware/view-preferences .vmware/view-recent-brokers .vmware/view-trusted-brokers .zshrc
+/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME pull origin master
 # Delete TODO files herre
 
 cat .config/pacman_list.txt | xargs sudo pacman --noconfirm -S
