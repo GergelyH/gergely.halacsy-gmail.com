@@ -66,6 +66,7 @@ source ~/.zshrc
 flutter doctor
 sudo chown -R $USER /opt/android-sdk
 sudo sdkmanager --install "system-images;android-29;default;x86"
+avdmanager create avd -n base -k "system-images;android-29;default;x86" #keyboard is around 70th option
 
 
 
