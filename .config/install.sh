@@ -40,15 +40,6 @@ git remote add origin git@github.com:GergelyH/nvim-config.git
 git fetch origin
 git checkout own
 
-#flutter
-yay -S flutter --noconfirm
-sudo chown -R $USER /opt/flutter
-flutter
-yay -S android-sdk android-sdk-platform-tools android-sdk-build-tools android-sdk-cmdline-tools-latest android-platform
-sudo flutter doctor --android-licenses
-sudo sdkmanager --install "system-images;android-29;default;x86"
-sudo chown -R $USER $ANDROID-SDK-ROOT
-
 #tmux
 cd
 git clone https://github.com/gpakosz/.tmux.git
@@ -62,6 +53,15 @@ git clone https://github.com/spaceship-prompt/spaceship-prompt.git "${ZSH_CUSTOM
 ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/spaceship.zsh-theme"
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+#flutter
+yay -S flutter --noconfirm
+sudo chown -R $USER /opt/flutter
+flutter
+yay -S android-sdk android-sdk-platform-tools android-sdk-build-tools android-sdk-cmdline-tools-latest android-platform
+sudo flutter doctor --android-licenses
+sudo sdkmanager --install "system-images;android-29;default;x86"
+sudo chown -R $USER $ANDROID-SDK-ROOT
 
 
 
