@@ -58,11 +58,15 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 #flutter
 yay -S flutter --noconfirm
 sudo chown -R $USER /opt/flutter
-flutter
+flutter doctor
 yay -S android-sdk android-sdk-platform-tools android-sdk-build-tools android-sdk-cmdline-tools-latest android-platform
+sudo chown -R $USER /opt/flutter
 sudo flutter doctor --android-licenses
+source ~/.zshrc
+flutter doctor
+sudo chown -R $USER /opt/android-sdk
 sudo sdkmanager --install "system-images;android-29;default;x86"
-sudo chown -R $USER $ANDROID-SDK-ROOT
+
 
 
 
