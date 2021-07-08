@@ -30,6 +30,7 @@ rm .config/kwinrc .profile .vmware/view-brokers-prefs .vmware/view-preferences .
 # Delete TODO files herre
 
 cat .config/pacman_list.txt | xargs sudo pacman --noconfirm -S
+cat .config/yay_list.txt | xargs yay --noconfirm -S
 
 #NVIM
 sudo pacman -S python-pip
