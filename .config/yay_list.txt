@@ -1,7 +1,2 @@
-android-sdk-build-tools
-android-sdk-cmdline-tools-latest
 megacmd
 snapd
-tmuxinator
-vmware-horizon-client
-vmware-keymaps

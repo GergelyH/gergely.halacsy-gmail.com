@@ -1,5 +1,3 @@
-bluetooth-support
-brave
 emacs
 kitty
 lua
@@ -8,7 +6,6 @@ nnn
 nodejs
 npm
 opendoas
-pavucontrol
 powerline
 qbittorrent
 ripgrep
