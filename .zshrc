@@ -11,8 +11,8 @@ export ZSH="/home/gergelyh/.oh-my-zsh"
 ZSH_THEME="spaceship"
 
 # Fonts
-powerline-daemon -q
-. /usr/lib/python3.9/site-packages/powerline/bindings/zsh/powerline.zsh
+#powerline-daemon -q
+#. /usr/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load

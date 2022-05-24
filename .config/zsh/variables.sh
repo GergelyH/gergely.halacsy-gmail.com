@@ -20,3 +20,5 @@ if [ -e /usr/share/terminfo/x/xterm-256color ]; then
 else
         export TERM='xterm-color'
 fi
+
+export FASTLANE_SKIP_UPDATE_CHECK=true
