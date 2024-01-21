@@ -3,12 +3,14 @@ export EDITOR='nvim'
 export ANDROID_SDK_ROOT='/opt/android-sdk'
 export PATH=$ANDROID_HOME/emulator:$PATH
 export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+export PATH=/opt/homebrew/bin:$PATH
 # export PATH=$PATH:$ANDROID_HOME/emulator
 # export PATH=$PATH:$ANDROID_HOME/platform-tools/
 # export PATH=$PATH:$ANDROID_HOME/tools/bin/
 # export PATH=$PATH:$ANDROID_HOME/tools/
 #export JAVA_HOME='/usr/lib/jvm/java-8-openjdk'
-export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+export JAVA_HOME='/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home'
+# export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
 export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions'
 
 export NNN_BMS='d:~/Documents;u:/home/user/Cam Uploads;D:~/Downloads/'

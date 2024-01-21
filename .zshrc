@@ -2,13 +2,18 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/gergelyh/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="spaceship"
+ZSH_THEME="steeef"
+
+SPACESHIP_PROMPT_ASYNC=false
+
+
+kubectl-set-namespace () { kubectl config set-context --current --namespace="$@" }
 
 # Fonts
 #powerline-daemon -q
@@ -67,14 +72,14 @@ ZSH_THEME="spaceship"
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM=$ZSH/custom
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting history-substring-search fzf)
+plugins=(zsh-autosuggestions zsh-syntax-highlighting history-substring-search fzf spaceship-vi-mode)
 
 export FZF_BASE=/usr/bin/fzf
 
@@ -113,34 +118,37 @@ fi
 if [ -f ~/.config/zsh/config.sh ]; then
     . ~/.config/zsh/config.sh
 fi
+if [ -f ~/.config/zsh/prezi.sh ]; then
+    . ~/.config/zsh/prezi.sh
+fi
 
-n ()
-{
-    # Block nesting of nnn in subshells
-    if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
-        echo "nnn is already running"
-        return
-    fi
+# n ()
+# {
+#     # Block nesting of nnn in subshells
+#     if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+#         echo "nnn is already running"
+#         return
+#     fi
 
-    # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
-    # To cd on quit only on ^G, remove the "export" as in:
-    #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
-    # NOTE: NNN_TMPFILE is fixed, should not be modified
-    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+#     # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
+#     # To cd on quit only on ^G, remove the "export" as in:
+#     #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+#     # NOTE: NNN_TMPFILE is fixed, should not be modified
+#     export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 
-    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
-    # stty start undef
-    # stty stop undef
-    # stty lwrap undef
-    # stty lnext undef
+#     # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+#     # stty start undef
+#     # stty stop undef
+#     # stty lwrap undef
+#     # stty lnext undef
 
-    nnn "$@"
+#     nnn "$@"
 
-    if [ -f "$NNN_TMPFILE" ]; then
-            . "$NNN_TMPFILE"
-            rm -f "$NNN_TMPFILE" > /dev/null
-    fi
-}
+#     if [ -f "$NNN_TMPFILE" ]; then
+#             . "$NNN_TMPFILE"
+#             rm -f "$NNN_TMPFILE" > /dev/null
+#     fi
+# }
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 SPACESHIP_PROMPT_SEPARATE_LINE=false
@@ -186,5 +194,14 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-alias luamake=/home/gergelyh/programs/lua-language-server/3rd/luamake/luamake
 
+
+# #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+# export SDKMAN_DIR="$HOME/.sdkman"
+# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+[[ -f ~/.pde/scripts/pde-zsh-completion.sh ]] && . ~/.pde/scripts/pde-zsh-completion.sh
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+alias ci="/Users/bp973/.prezi/frontend-packages/node_modules/.bin/ci"
+alias bach="/Users/bp973/.prezi/frontend-packages/node_modules/.bin/bach"
